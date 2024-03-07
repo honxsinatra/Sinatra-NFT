@@ -8,10 +8,10 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
   log("___________________________________________________________");
 
-  const arguments = [];
+  const args = [];
   const basicNFT = await deploy("basicNFT", {
     from: deployer,
-    args: arguments,
+    args: args,
     logs: true,
     waitConfirmations: network.config.blockconfirmations || 1,
   });
@@ -23,7 +23,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     process.env.ETHERSCAN_API_KEY
   ) {
     log("Verifying...");
-    await verify(basicNFT.address, arguments);
+    await verify(basicNFT.address, args);
   }
 };
 
