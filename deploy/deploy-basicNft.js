@@ -3,8 +3,8 @@ const { developmentChains } = require("../helper-hardhat-config");
 const { verify } = require("../utils/verify");
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
-  const { deploy, log } = deployments;
-  const { deployer } = await getNamedAccounts;
+  const { deploy, log } = deployments;;
+  const { deployer } = await getNamedAccounts();
 
   log("___________________________________________________________");
 
@@ -12,12 +12,12 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   const basicNFT = await deploy("basicNFT", {
     from: deployer,
     args: args,
-    logs: true,
+    log: true,
     waitConfirmations: network.config.blockconfirmations || 1,
   });
-  log(`deployed,contract address: ${basicNFT}.address`);
+  log(`deployed, contract address: ${basicNFT.address}`);
 
-  //Verification of the contract
+  // Verification of the contract
   if (
     !developmentChains.includes(network.name) &&
     process.env.ETHERSCAN_API_KEY

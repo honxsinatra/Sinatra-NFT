@@ -1,4 +1,4 @@
-require("@nomicfoundation/hardhat-toolbox");
+require("@nomiclabs/hardhat-etherscan");
 require("hardhat-deploy");
 require("dotenv").config();
 require("hardhat-gas-reporter");
