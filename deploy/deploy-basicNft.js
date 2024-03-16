@@ -1,29 +1,39 @@
-const { network } = require("hardhat");
+const { network, ethers, deployments } = require("hardhat");
 const { developmentChains } = require("../helper-hardhat-config");
 const { verify } = require("../utils/verify");
+const { assert } = require("chai");
 
-module.exports = async ({ getNamedAccounts, deployments }) => {
-  const { deploy, log } = deployments;
-  const { deployer } = await getNamedAccounts();
+module.exports = async function () {
+  const { log } = deployments;
+  try {
+    // Compiling the smart contract
+    const basicNFTFactory = await ethers.getContractFactory("basicNFT");
+    // Deploying the contract
+    log("Deploying YourContract...");
+    const basicNFT = await basicNFTFactory.deploy();
 
-  log("___________________________________________________________");
+    // Waiting for the contract to be deployed
+    await basicNFT.deployed();
 
-  const args = [];
-  const basicNFT = await deploy("basicNFT", {
-    from: deployer,
-    args: args,
-    log: true,
-    waitConfirmations: network.config.blockconfirmations || 1,
-  });
-  log(`deployed, contract address: ${basicNFT.address}`);
+    // Logging contract address
+    log(`YourContract deployed to: ${basicNFT}.address)`);
 
-  // Verification of the contract
-  if (
-    !developmentChains.includes(network.name) &&
-    process.env.ETHERSCAN_API_KEY
-  ) {
-    log("Verifying...");
-    await verify(basicNFT.address, args);
+    //Verifying the smart contract
+    if (
+      !developmentChains.includes(network.name) &&
+      process.env.ETHERSCAN_API_KEY
+    ) {
+      try {
+        log("Verifying...");
+        await verify(basicNFT.address, args);
+      } catch (error) {
+        assert.fail(`Deployment failed with error: ${error.message}`);
+        process.exit(1);
+      }
+    }
+  } catch (error) {
+    assert.fail(`Deployment failed with error: ${error.message}`);
+    process.exit(1);
   }
 };
 
