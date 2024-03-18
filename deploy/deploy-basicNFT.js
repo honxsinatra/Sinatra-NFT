@@ -1,4 +1,5 @@
-const { network, ethers, deployments } = require("hardhat");
+const { network, hre, deployments } = require("hardhat");
+const { ethers } = require("ethers");
 const { developmentChains } = require("../helper-hardhat-config");
 const { verify } = require("../utils/verify");
 const { assert } = require("chai");
@@ -8,6 +9,7 @@ module.exports = async function () {
   try {
     // Compiling the smart contract
     const basicNFTFactory = await ethers.getContractFactory("basicNFT");
+
     // Deploying the contract
     log("Deploying YourContract...");
     const basicNFT = await basicNFTFactory.deploy();
@@ -16,7 +18,7 @@ module.exports = async function () {
     await basicNFT.deployed();
 
     // Logging contract address
-    log(`YourContract deployed to: ${basicNFT}.address)`);
+    log(`YourContract deployed to: ${basicNFT.address}`);
 
     //Verifying the smart contract
     if (
@@ -25,7 +27,7 @@ module.exports = async function () {
     ) {
       try {
         log("Verifying...");
-        await verify(basicNFT.address, args);
+        await verify(basicNFT.address);
       } catch (error) {
         assert.fail(`Deployment failed with error: ${error.message}`);
         process.exit(1);
